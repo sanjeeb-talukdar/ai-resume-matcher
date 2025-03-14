@@ -8,7 +8,7 @@ An intelligent AI-powered tool that matches resumes with job descriptions using 
 
 ## 🚀 Demo
 
-Check out the live app 👉 [AI Resume Matcher on Streamlit Cloud](https://airesumematcher.streamlit.app)
+Check out the live app 👉 [AI Resume Matcher on Streamlit Cloud](https://ai-resume-matcher-sanjib.streamlit.app/)
 
 ## 📌 Features
 
