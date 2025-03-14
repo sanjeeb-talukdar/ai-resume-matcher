@@ -1,28 +1,23 @@
 import streamlit as st
-from resume_matcher import match_resumes
-from utils import extract_text_from_pdf
-import os
+from utils import extract_text_from_file, match_resume_to_job
 
-st.set_page_config(page_title="AI Resume Matcher", layout="wide")
-st.title("🔍 AI Resume Matcher")
+st.set_page_config(page_title="AI Simple Resume Matcher", layout="centered")
 
-job_desc = st.text_area("📄 Paste Job Description", height=200)
+st.title("🤖 AI Simple Resume Matcher")
+st.markdown("Upload your resume and paste a job description to see how well they match!")
 
-uploaded_resumes = st.file_uploader("📎 Upload Resumes (PDF)", type="pdf", accept_multiple_files=True)
+uploaded_file = st.file_uploader("📄 Upload your resume (PDF or Word)", type=["pdf", "docx"])
 
-if st.button("Match Resumes"):
-    if not job_desc or not uploaded_resumes:
-        st.warning("Please provide job description and at least one resume.")
+job_description = st.text_area("📝 Paste the job description here", height=300)
+
+if st.button("🔍 Match Resume"):
+    if uploaded_file and job_description.strip():
+        with st.spinner("Analyzing resume and job description..."):
+            resume_text = extract_text_from_file(uploaded_file)
+            match_score, feedback = match_resume_to_job(resume_text, job_description)
+
+        st.success(f"✅ Match Score: **{match_score}%**")
+        st.markdown("### 💡 Feedback:")
+        st.write(feedback)
     else:
-        results = []
-        for file in uploaded_resumes:
-            resume_text = extract_text_from_pdf(file)
-            score = match_resumes(job_desc, resume_text)
-            results.append((file.name, score))
-        
-        results = sorted(results, key=lambda x: x[1], reverse=True)
-        st.success("✅ Matching Completed")
-        
-        st.write("### 🎯 Match Results")
-        for name, score in results:
-            st.write(f"**{name}** — Match Score: `{round(score*100, 2)}%`")
+        st.warning("Please upload a resume and enter a job description.")
